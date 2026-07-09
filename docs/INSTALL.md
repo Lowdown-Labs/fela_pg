@@ -16,7 +16,8 @@ Three install paths, in order of how little you need to do:
 1. [Docker (recommended)](#1-docker-recommended): zero config, one command.
 2. [Prebuilt package from GitHub Releases](#2-prebuilt-package-from-github-releases): `.deb`,
    `.rpm`, or a plain tarball, per supported PostgreSQL major.
-3. [Build from source](#3-build-from-source-cargo-pgrx) with `cargo-pgrx`.
+3. [Homebrew](#3-homebrew-macos-linuxbrew) on macOS or Linuxbrew.
+4. [Build from source](#4-build-from-source-cargo-pgrx) with `cargo-pgrx`.
 
 macOS (Docker Desktop / Apple Silicon) users: see [macOS](#macos-docker-desktop--apple-silicon).
 
@@ -144,7 +145,36 @@ installs cleanly and passes the honesty gate.
 
 ---
 
-## 3. Build from source (`cargo-pgrx`)
+## 3. Homebrew (macOS, Linuxbrew)
+
+```bash
+brew tap lowdown-labs/tap
+brew install pg_fela
+```
+
+This builds from source, so budget several minutes: it compiles `cargo-pgrx` first, then the
+extension. If you just want to try pg_fela, the Docker image above is instant.
+
+Two things to know before you run it:
+
+* The formula installs `postgresql@18` as a dependency. If you already run a different major
+  through Homebrew, you will end up with two Postgres installs side by side. Use the tarball in
+  section 2 to install into an existing cluster instead.
+* `build.rs` downloads the frozen FelaTab weights (about 50 MB) from the CDN and embeds them into
+  `pg_fela.so`, so the build needs network access. To build offline, point `FELATAB_WEIGHTS` at a
+  local `felatab_int8.safetensors`:
+
+  ```bash
+  FELATAB_WEIGHTS=/path/to/felatab_int8.safetensors brew install --build-from-source pg_fela
+  ```
+
+Then, in a database of your choice:
+
+```sql
+CREATE EXTENSION pg_fela;
+```
+
+## 4. Build from source (`cargo-pgrx`)
 
 Needs a Rust toolchain, `cargo-pgrx`, and PostgreSQL dev headers for the target major (see
 `.github/workflows/ci.yml` for the exact apt/pgdg setup this project uses).

@@ -84,8 +84,17 @@ The extension is `CREATE EXTENSION`ed automatically on first boot; the model is 
 weights from `FELATAB_MODEL_URL` and embeds them at compile time; see
 [`docs/INSTALL.md`](docs/INSTALL.md).)
 
-A tarball onto an existing PostgreSQL install, and building from source with `cargo pgrx`, are
-also supported. Full instructions: [`docs/INSTALL.md`](docs/INSTALL.md).
+On a Mac, or anywhere with Homebrew:
+
+```bash
+brew tap lowdown-labs/tap
+brew install pg_fela
+```
+
+That one builds from source and takes a few minutes. The container is the fast path.
+
+A `.deb`, an `.rpm`, a tarball onto an existing PostgreSQL install, and building from source with
+`cargo pgrx` are also supported. Full instructions: [`docs/INSTALL.md`](docs/INSTALL.md).
 
 # What this Repo Builds / Provides
 
